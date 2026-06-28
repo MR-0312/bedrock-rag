@@ -35,6 +35,7 @@ MODEL_MAX_TOKENS = {
 }
 _LABELS = list(MODELS)
 _DEFAULT_IDX = next((i for i, k in enumerate(_LABELS) if MODELS[k] == CHAT_MODEL_ID), 0)
+_MAX_CAP = max(MODEL_MAX_TOKENS.values())  # slider ceiling; clamped per-model at request time
 
 _SENTINEL = object()
 
@@ -87,12 +88,13 @@ async def _index_pdf(file):
 async def start():
     cl.user_session.set("settings", {
         "model": _LABELS[_DEFAULT_IDX], "temperature": 0.2,
-        "max_tokens": 1024, "top_k": 4,
+        "max_tokens": 2048, "top_k": 4,
     })
     await cl.ChatSettings([
         Select(id="model", label="Model", values=_LABELS, initial_index=_DEFAULT_IDX),
         Slider(id="temperature", label="Temperature", initial=0.2, min=0, max=1, step=0.05),
-        Slider(id="max_tokens", label="Max answer tokens", initial=1024, min=256, max=8192, step=128),
+        Slider(id="max_tokens", label="Max answer tokens (auto-capped to model limit)",
+               initial=2048, min=256, max=_MAX_CAP, step=256),
         Slider(id="top_k", label="Chunks retrieved (k)", initial=4, min=2, max=10, step=1),
     ]).send()
 
