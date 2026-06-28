@@ -1,0 +1,35 @@
+# Secrets — NEVER commit
+.env
+*.key
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# Chainlit
+.chainlit/
+.files/
+chainlit.db
+
+# Claude Code
+.claude/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Local model / data caches
+.cache/
+*.faiss
+*.index
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
